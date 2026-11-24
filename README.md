@@ -1,32 +1,75 @@
-# Sprint 1: Transformación de datos CSV a JSON
+# React + TypeScript + Vite
 
-Proyecto 03 — Dashboard del clima (Guayaquil, Quito y Santa Elena).
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Archivos
-- `clima-guayaquil-quito-santaelena.csv`: dataset original.
-- `transformar_csv_json.py`: script de conversión y validación.
-- `clima-guayaquil-quito-santaelena.json`: resultado generado.
+Currently, two official plugins are available:
 
-## Requisitos
-Python 3.8 o superior. No se necesitan paquetes externos.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## Ejecución
-Abre una terminal en esta carpeta y ejecuta:
+## React Compiler
 
-```bash
-python transformar_csv_json.py
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+
 ```
 
-En algunos sistemas el comando es `python3 transformar_csv_json.py`.
+You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
 
-## Procedimiento
-1. Se lee el CSV utilizando `csv.DictReader` y codificación UTF-8.
-2. Se eliminan espacios al inicio y final de los valores y se comprueban los campos vacíos.
-3. Se convierten `YEAR`, `DOY` y `MONTH` a enteros y las seis variables meteorológicas a decimales.
-4. Se valida el formato de `DATE` (`AAAA-MM-DD`) y su coherencia con año, mes y día del año. `CITY` y `RAIN` permanecen como texto.
-5. Se escribe un arreglo de objetos JSON y se vuelve a cargar para verificar su sintaxis y cantidad de registros.
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-Los 12 nombres de columnas y todos los registros del CSV se conservan. El script detiene la conversión con un error si encuentra valores faltantes o fechas inconsistentes, en vez de modificar datos silenciosamente.
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 
-## Evidencia para el reporte
-Agregar una captura del JSON abierto en un editor, mostrando los primeros objetos, y otra de la terminal con el mensaje de conversión exitosa. Registrar además la URL del repositorio y el SHA del commit después de subir los archivos a GitHub.
+```
