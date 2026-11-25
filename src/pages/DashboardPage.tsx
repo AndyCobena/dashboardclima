@@ -4,7 +4,6 @@ import { useTheme } from '@mui/material/styles';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import DashboardHeader from '../components/layout/DashboardHeader';
 import {
-  mockRecords,
   cities,
   years,
   rainCategories,
@@ -36,7 +35,9 @@ import RainStackedBarChart from '../components/charts/RainStackedBarChart';
 import DataTable from '../components/records/DataTable';
 import RecentRecordsList from '../components/records/RecentRecordsList';
 import EmptyState from '../components/feedback/EmptyState';
-
+import { useClimateData } from '../hooks/useClimateData';
+import LoadingState from '../components/feedback/LoadingState';
+import ErrorState from '../components/feedback/ErrorState';
 
 const tableColumns: ColumnDef[] = [
     { field: 'date', label: 'FECHA' },
@@ -57,7 +58,8 @@ export default function DashboardPage() {
     theme.breakpoints.down('sm')
   );
 
-  
+  const { records, loading, error } = useClimateData();
+
     // Estados de los filtros
     const [selectedCity, setSelectedCity] =
     useState<CityFilterValue>('Todas');
@@ -72,7 +74,7 @@ export default function DashboardPage() {
 
     // Registros según los filtros seleccionados
     const filteredRecords = filterClimateRecords(
-    mockRecords,
+    records,
     selectedCity,
     selectedYear,
     selectedRain
@@ -120,7 +122,7 @@ export default function DashboardPage() {
       <DashboardHeader
         title="Clima en Guayaquil, Quito y Santa Elena"
         periodLabel="2021–2025"
-        recordCount={mockRecords.length}
+        recordCount={records.length}
         cityCount={cities.length}
         yearCount={years.length}
       />
@@ -154,12 +156,14 @@ export default function DashboardPage() {
         />
 
 
-    {filteredRecords.length === 0 ? (
-    <EmptyState
-        message="No existen datos para los filtros seleccionados. Intenta modificar tu selección."
-    />
+    {loading ? (
+        <LoadingState message="Cargando datos climáticos..." />
+    ) : error ? (
+        <ErrorState message={error} />
+    ) : filteredRecords.length === 0 ? (
+        <EmptyState message="No existen registros para los filtros seleccionados." />
     ) : (
-    <>
+        <>
         {/* Indicadores KPI */}
         <KpiGrid items={kpis} />
 
