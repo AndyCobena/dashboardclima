@@ -67,7 +67,7 @@ export default function DashboardHeader({
           color="text.secondary"
           sx={{ flexShrink: 0 }}
         >
-          {recordCount.toLocaleString('es-EC')} registros de ejemplo
+          {recordCount.toLocaleString('es-EC')} registros
           {' · '}
           {cityCount} ciudades
           {' · '}

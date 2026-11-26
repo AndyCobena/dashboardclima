@@ -70,3 +70,20 @@ export interface ColumnDef {
     field: keyof ClimateRecord;
     label: string;
 }
+
+
+export interface FirebaseClimateRecord {
+    YEAR: number;
+    DOY: number;
+    T2M: number;
+    T2M_MAX: number;
+    T2M_MIN: number;
+    RH2M: number;
+    WS10M: number;
+    PRECTOTCORR: number;
+    CITY: City;
+    RAIN: RainCategory;
+    DATE: string;
+    MONTH: number;
+}
+  
